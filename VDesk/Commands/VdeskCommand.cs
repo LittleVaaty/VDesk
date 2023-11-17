@@ -6,7 +6,7 @@ namespace VDesk.Commands
 {
     [Command(Name = "vdesk", FullName = "vdesk", Description = "Manage application accros virtual desktop")]
     [VersionOptionFromMember(MemberName = nameof(GetVersion))]
-    [Subcommand(typeof(CreateCommand), typeof(MoveCommand), typeof(RunCommand), typeof(SwitchCommand))]
+    [Subcommand(typeof(CreateCommand), typeof(MoveCommand), typeof(RunCommand), typeof(SwitchCommand), typeof(SetNameCommand))]
     internal class VdeskCommand : VdeskCommandBase
     {
         public override int Execute(CommandLineApplication app)

@@ -7,7 +7,6 @@ public enum AdjacentDesktop
     RightDirection = 4,
 }
 
-[ComInterface]
 public interface IVirtualDesktopManagerInternal
 {
     IEnumerable<IVirtualDesktop> GetDesktops();

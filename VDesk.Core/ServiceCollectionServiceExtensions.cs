@@ -42,7 +42,7 @@ public static class ServiceCollectionServiceExtensions
         }
         else
         {
-            //throw new NotSupportedException();
+            throw new NotSupportedException();
         }
 
         return services;

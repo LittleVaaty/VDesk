@@ -6,4 +6,5 @@ public interface IVirtualDesktopProvider
     Guid Create();
     void MoveToDesktop(IntPtr hWnd, Guid virtualDesktopId);
     void Switch(Guid virtualDesktopId);
+    void SetDesktopName(Guid virtualDesktopId, string name);
 }

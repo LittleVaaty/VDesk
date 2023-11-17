@@ -3,7 +3,8 @@ using VDesk.Core.Interop.Proxy;
 
 namespace VDesk.Core.Interop;
 
-internal class VirtualDesktopProvider<TVirtualDesktopManagerInternal, TVirtualDesktop, TApplicationView, TApplicationViewCollection> : IVirtualDesktopProvider
+internal class VirtualDesktopProvider<TVirtualDesktopManagerInternal, TVirtualDesktop, TApplicationView,
+    TApplicationViewCollection> : IVirtualDesktopProvider
 {
     private readonly IApplicationViewCollection _applicationViewCollection;
     private readonly IVirtualDesktopManagerInternal _virtualDesktopManagerInternal;
@@ -12,14 +13,10 @@ internal class VirtualDesktopProvider<TVirtualDesktopManagerInternal, TVirtualDe
     public VirtualDesktopProvider()
     {
         _applicationViewCollection = new ApplicationViewCollection<TApplicationViewCollection, TApplicationView>();
-        _virtualDesktopManagerInternal = new VirtualDesktopManagerInternal<TVirtualDesktopManagerInternal, TVirtualDesktop, TApplicationView>(_applicationViewCollection);
+        _virtualDesktopManagerInternal =
+            new VirtualDesktopManagerInternal<TVirtualDesktopManagerInternal, TVirtualDesktop, TApplicationView>(
+                _applicationViewCollection);
     }
-    public virtual bool IsSupported
-        => true;
-
-
-    protected static InvalidOperationException InitializationIsRequired
-        => new("Initialization is required.");
 
     public Guid[] GetDesktop()
     {
@@ -55,6 +52,18 @@ internal class VirtualDesktopProvider<TVirtualDesktopManagerInternal, TVirtualDe
         if (_knownDesktops.TryGetValue(virtualDesktopId, out var virtualDesktop))
         {
             _virtualDesktopManagerInternal.SwitchDesktop(virtualDesktop);
+        }
+        else
+        {
+            throw new KeyNotFoundException($"cannot found virtualdesktop with key {virtualDesktopId.ToString()}");
+        }
+    }
+
+    public void SetDesktopName(Guid virtualDesktopId, string name)
+    {
+        if (_knownDesktops.TryGetValue(virtualDesktopId, out var virtualDesktop))
+        {
+            _virtualDesktopManagerInternal.SetDesktopName(virtualDesktop, name);
         }
         else
         {

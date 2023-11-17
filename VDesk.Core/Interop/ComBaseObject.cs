@@ -22,26 +22,26 @@ public class ComBaseObject<TInterface>
     {
         var instance = CreateInstance(typeof(TInterface), clsid);
 
-        this.ComObject = instance;
+        ComObject = instance;
     }
 
     private protected ComBaseObject(object comObject)
     {
-        this.ComObject = comObject;
+        ComObject = comObject;
     }
 
     protected static object?[] Args(params object?[] args)
         => args;
 
     protected void InvokeMethod(object?[]? parameters = null, [CallerMemberName] string methodName = "")
-        => this.InvokeMethod<object>(parameters, methodName);
+        => InvokeMethod<object>(parameters, methodName);
 
     protected T? InvokeMethod<T>(object?[]? parameters = null, [CallerMemberName] string methodName = "")
     {
-        if (this._methods.TryGetValue(methodName, out var methodInfo)
-            || (methodInfo = this.ComInterfaceType.GetMethod(methodName)) != null)
+        if (_methods.TryGetValue(methodName, out var methodInfo)
+            || (methodInfo = ComInterfaceType.GetMethod(methodName)) != null)
         {
-            this._methods[methodName] = methodInfo;
+            _methods[methodName] = methodInfo;
         }
         else
             throw new NotSupportedException(
@@ -49,7 +49,7 @@ public class ComBaseObject<TInterface>
 
         try
         {
-            return (T?)methodInfo.Invoke(this.ComObject, parameters);
+            return (T?)methodInfo.Invoke(ComObject, parameters);
         }
         catch (TargetInvocationException ex) when (ex.InnerException != null)
         {
