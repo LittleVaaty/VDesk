@@ -1,5 +1,5 @@
 # VDesk
----
+
 [![.NET](https://github.com/LittleVaaty/VDesk/actions/workflows/dotnet-CI.yml/badge.svg)](https://github.com/LittleVaaty/VDesk/actions/workflows/dotnet-CI.yml)
 
 This is a fork of [eksime/VDesk](https://github.com/eksime/VDesk) that support Windows 10 and 11.
@@ -7,15 +7,22 @@ The main reason of the fork is that the original project seam to be abadonned.
 
 > **Note :** due to migration in .netcore, the command argument have change. If you install this version, you will need to addapt your usage of vdesk.
 
-#### Download:
 
-See the [releases page](https://github.com/LittleVaaty/VDesk/releases/).
+## Install
 
 #### Requirements
 - Windows 10 build 19041 (20H1) or later
-- Windows 11 (Not working yet)
+- Windows 11
 
-#### Usage:
+### Manual Install:
+- Unistall previous vdesk installation
+- Download vdesk from the [releases page](https://github.com/LittleVaaty/VDesk/releases/).
+- Unzip the archive and put the exe where you want
+- Add the location to your path
+> **TODO:** provide more info !!
+
+
+## Usage:
 
 `vdesk create <number>`
 
@@ -27,7 +34,7 @@ See the [releases page](https://github.com/LittleVaaty/VDesk/releases/).
 
 Run `vdesk [command] --help` for more information about a command.
 
-#### Examples:
+### Examples:
 Create total of 5 desktops:
 
 `vdesk create 5`
