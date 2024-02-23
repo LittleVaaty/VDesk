@@ -6,6 +6,9 @@ using Build22621 = VDesk.Core.Interop.Build22621_2215;
 using Build20348 = VDesk.Core.Interop.Build20348_0000;
 using Build22000 = VDesk.Core.Interop.Build22000_0000;
 using Build17134 = VDesk.Core.Interop.Build17134_0000;
+using Build22621_3155 = VDesk.Core.Interop.Build22621_3155;
+using Build22631_2428 = VDesk.Core.Interop.Build22631_2428;
+using Build22631_3155 = VDesk.Core.Interop.Build22631_3155;
 using VDesk.Utils;
 
 namespace VDesk.Core;
@@ -16,10 +19,22 @@ public static class ServiceCollectionServiceExtensions
     {
         var v = OS.Build;
 
-        if (v >= new Version(10, 0, 22621, 2215))
+        if (v >= new Version(10, 0, 22631, 3155))
+        {
+            services.AddScoped<IVirtualDesktopProvider, VirtualDesktopProvider<Build22631_3155.IVirtualDesktopManagerInternal, Build22631_3155.IVirtualDesktop, Build22631_3155.IApplicationView, Build22631_3155.IApplicationViewCollection>>();
+        }
+        else if (v >= new Version(10, 0, 22631, 2428))
+        {
+            services.AddScoped<IVirtualDesktopProvider, VirtualDesktopProvider<Build22631_2428.IVirtualDesktopManagerInternal, Build22631_2428.IVirtualDesktop, Build22631_2428.IApplicationView, Build22631_2428.IApplicationViewCollection>>();
+        }
+        else if (v >= new Version(10, 0, 22621, 3155))
+        {
+            services.AddScoped<IVirtualDesktopProvider, VirtualDesktopProvider<Build22621_3155.IVirtualDesktopManagerInternal, Build22621_3155.IVirtualDesktop, Build22621_3155.IApplicationView, Build22621_3155.IApplicationViewCollection>>();
+        }
+        else if (v >= new Version(10, 0, 22621, 2215))
         {
             services.AddScoped<IVirtualDesktopProvider, VirtualDesktopProvider<Build22621.IVirtualDesktopManagerInternal, Build22621.IVirtualDesktop, Build22621.IApplicationView, Build22621.IApplicationViewCollection>>();
-        } 
+        }
         else if (v >= new Version(10, 0, 22000, 0))
         {
             services.AddScoped<IVirtualDesktopProvider, VirtualDesktopProvider<Build22000.IVirtualDesktopManagerInternal, Build22000.IVirtualDesktop, Build22000.IApplicationView, Build22000.IApplicationViewCollection>>();
