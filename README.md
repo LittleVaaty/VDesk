@@ -74,7 +74,8 @@ To launch a new Firefox using several arguments which also contain quotation mar
 
 `vdesk run --on 2 --no-switch "C:\Program Files\Mozilla Firefox\firefox.exe" -a "-P \"GPT-Nutzung\" -no-remote \"localhost:3000\""`
 
-Note: If you use powershell instead of cmd you cannot use that `\"` notation to handle the quotation in the arguments, use `'` instead in the embracing qutotation marks: 
+Note: If you use powershell instead of cmd you cannot use that `\"` notation to handle the quotation in the arguments, use `'` instead in the embracing qutotation marks:
+
 `vdesk run --on 2 --no-switch "C:\Program Files\Mozilla Firefox\firefox.exe" --arguments '-P "GPT-Nutzung" -no-remote "localhost:3000"'`
 
 ## Copyright notice
