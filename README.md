@@ -12,7 +12,7 @@ The main reason of the fork is that the original project seam to be abadonned.
 
 #### Requirements
 - Windows 11 or Windows 10 build 19041 (20H1) and later
-- Dotnet/.NET Runtime at least 6 (e.g. download latest Long Term Support Version and there either .NET Runtime or .NET Desktop Runtime 8.0.4 - the first is sufficient for this app - from this page: https://dotnet.microsoft.com/en-us/download/dotnet )
+- Dotnet/.NET Runtime at least 8 (e.g. download latest Long Term Support Version and there either .NET Runtime or .NET Desktop Runtime 8.0.4 - the first is sufficient for this app - from this page: https://dotnet.microsoft.com/en-us/download/dotnet )
 
 ### Manual Install:
 - Unistall previous vdesk installation
