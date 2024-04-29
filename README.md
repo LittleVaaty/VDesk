@@ -11,8 +11,8 @@ The main reason of the fork is that the original project seam to be abadonned.
 ## Install
 
 #### Requirements
-- Windows 10 build 19041 (20H1) or later
-- Windows 11
+- Windows 11 or Windows 10 build 19041 (20H1) and later
+- Dotnet/.NET Runtime at least 8 (e.g. download latest Long Term Support Version and there either .NET Runtime or .NET Desktop Runtime 8.0.4 - the first is sufficient for this app - from this page: https://dotnet.microsoft.com/en-us/download/dotnet )
 
 ### Manual Install:
 - Unistall previous vdesk installation
@@ -39,9 +39,14 @@ Create total of 5 desktops:
 
 `vdesk create 5`
 
-Run notepad on virtual desktop 4 without switching:
+Run notepad ***o***n virtual desktop ***n***umber 4 without switching:
 
 `vdesk run -n -o 4 notepad.exe`
+
+Now the same in long syntax form instead of short:
+
+`vdesk run --no-switch --on 4 notepad.exe`
+
 
 > **Note:** If VDesk doesn't work at first, check the program's command line options for ways to create a new window - For example Chrome has the `/new-window` argument which allows it to function with VDesk.
 
@@ -57,18 +62,21 @@ To launch notepad on current desktop:
 
 `vdesk run notepad`
 
-To launch notepad on desktop 3 and open `C:\some file.txt`:
+To launch notepad on desktop 3 and open `C:\some file.txt` using it as an ***a***rgument:
 
 `vdesk run -o 3 notepad -a "C:\some file.txt"`
-
-To launch a new VirtualBox vm fullscreen on its own virtual desktop, and switch to it:
-
-`vdesk run "C:\Path to Vbox\VirtualBox.exe" -a "--comment \"VM\" --startvm \"vm-id-no\" --fullscreen"`
-> **Note:** to be tested !!
 
 To open Github in a new Chrome window on the second desktop split half screen to the left:
 
 `vdesk run -o 2 --half-split left "C:\Program Files\Google\Chrome\Application\chrome.exe" -a "/new-window https://github.com"`
+
+To launch a new Firefox using several arguments which also contain quotation marks use `\"` for escaping:
+
+`vdesk run --on 2 --no-switch "C:\Program Files\Mozilla Firefox\firefox.exe" -a "-P \"GPT-Nutzung\" -no-remote \"localhost:3000\""`
+
+Note: If you use powershell instead of cmd you cannot use that `\"` notation to handle the quotation in the arguments, use `'` instead in the embracing qutotation marks:
+
+`vdesk run --on 2 --no-switch "C:\Program Files\Mozilla Firefox\firefox.exe" --arguments '-P "GPT-Nutzung" -no-remote "localhost:3000"'`
 
 ## Copyright notice
 
