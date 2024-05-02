@@ -78,6 +78,10 @@ Note: If you use powershell instead of cmd you cannot use that `\"` notation to 
 
 `vdesk run --on 2 --no-switch "C:\Program Files\Mozilla Firefox\firefox.exe" --arguments '-P "GPT-Nutzung" -no-remote "localhost:3000"'`
 
+To launch an app that take time to open, use the ***W***aiting argument. The time is specified in millisecond:
+
+`vdesk run --on 2 --no-switch -w 1000 "C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE"`
+
 ## Copyright notice
 
 Copyright (C) 2018
