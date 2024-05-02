@@ -40,6 +40,9 @@ namespace VDesk.Commands
 
         [Option("--half-split")] public HalfSplit? HalfSplit { get; set; }
 
+        [Option("-w|--waiting", Description = "Time in milisecond to wait after the star of the process before trying to move it.")] 
+        public int? WaitingTime { get; set; }
+
         public override int Execute(CommandLineApplication app)
         {
             if (Verbose.HasValue && Verbose.Value)
@@ -54,7 +57,6 @@ namespace VDesk.Commands
                 desktopIds = desktopIds.Append(_virtualDesktopProvider.Create()).ToArray();
             }
 
-
             var desktopId = desktopIds[DesktopNumber - 1];
 
             if (!NoSwitch.HasValue || !NoSwitch.Value)
@@ -65,7 +67,7 @@ namespace VDesk.Commands
             if (NoSwitch.HasValue && NoSwitch.Value)
             {
                 // For unknown reason, without it the view is not found
-                Thread.Sleep(1);
+                Thread.Sleep(WaitingTime ?? 1);
                 _virtualDesktopProvider.MoveToDesktop(hWnd, desktopId);
             }
 
