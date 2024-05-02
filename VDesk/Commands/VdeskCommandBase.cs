@@ -28,7 +28,7 @@ namespace VDesk.Commands
                     //_logger.LogInformation($"*** {AssemblyInfo.Title} Library ***");
                     //_logger.LogInformation($"Version:  {AssemblyInfo.VersionString}");
                     Logger.LogInformation($"OS Build: {OS.Build}");
-                    //_logger.LogInformation($"Provider: {tProvider.GeType().Name}");
+                    Logger.LogInformation($"Working Directory: {Directory.GetCurrentDirectory()}");
                 }
                 return Execute(app);
             }

@@ -28,7 +28,7 @@ namespace VDesk.Services
             try
             {
                 if (Directory.Exists(Path.GetDirectoryName(command)))
-                    startInfo.WorkingDirectory = Path.GetDirectoryName(command);
+                    startInfo.WorkingDirectory = Directory.GetCurrentDirectory();
             }
             catch
             {
