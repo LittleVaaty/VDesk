@@ -3,7 +3,6 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>    
-        <PublishSingleFile>true</PublishSingleFile>
         <RootNamespace>VDesk</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>

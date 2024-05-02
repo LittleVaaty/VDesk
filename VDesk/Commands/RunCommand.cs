@@ -54,6 +54,7 @@ namespace VDesk.Commands
                 desktopIds = desktopIds.Append(_virtualDesktopProvider.Create()).ToArray();
             }
 
+
             var desktopId = desktopIds[DesktopNumber - 1];
 
             if (!NoSwitch.HasValue || !NoSwitch.Value)
