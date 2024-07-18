@@ -1,28 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
-using VDesk.Core;
+using VDesk.Interop;
 using VDesk.Services;
 using VDesk.Utils;
 
 namespace VDesk.Commands
 {
     [Command(Description = "Run a command")]
-    internal class RunCommand : VdeskCommandBase
+    internal class RunCommand(ILogger<RunCommand> logger,
+        IProcessService processService, IWindowService windowService,
+        IVirtualDesktopProvider virtualDesktopProvider) : VdeskCommandBase(logger, virtualDesktopProvider)
     {
-        private readonly IVirtualDesktopProvider _virtualDesktopProvider;
-        private readonly IProcessService _processService;
-        private readonly IWindowService _windowService;
-
-        public RunCommand(ILogger<RunCommand> logger,
-            IProcessService processService, IWindowService windowService,
-            IVirtualDesktopProvider virtualDesktopProvider)
-            : base(logger)
-        {
-            _processService = processService;
-            _windowService = windowService;
-            _virtualDesktopProvider = virtualDesktopProvider;
-        }
+        private readonly IProcessService _processService = processService;
+        private readonly IWindowService _windowService = windowService;
 
         [Option("-o|--on", CommandOptionType.SingleValue, Description = "Desktop on witch the command is run")]
         [Range(1, 100)]
@@ -47,20 +38,20 @@ namespace VDesk.Commands
         {
             if (Verbose.HasValue && Verbose.Value)
             {
-                Logger.LogInformation($"Provider: {_virtualDesktopProvider.GetType()}");
+                Logger.LogInformation($"Provider: {VirtualDesktopProvider.GetType()}");
             }
 
-            var desktopIds = _virtualDesktopProvider.GetDesktop();
+            var desktopIds = VirtualDesktopProvider.GetDesktop();
 
-            while (DesktopNumber > desktopIds.Length)
+            while (DesktopNumber > desktopIds.Count)
             {
-                desktopIds = desktopIds.Append(_virtualDesktopProvider.Create()).ToArray();
+                desktopIds.Add(VirtualDesktopProvider.CreateDesktop());
             }
 
             var desktopId = desktopIds[DesktopNumber - 1];
 
             if (!NoSwitch.HasValue || !NoSwitch.Value)
-                _virtualDesktopProvider.Switch(desktopId);
+                VirtualDesktopProvider.Switch(desktopId);
 
             _processService.Start(Command, Arguments ?? string.Empty, out var hWnd);
 
@@ -68,7 +59,7 @@ namespace VDesk.Commands
             {
                 // For unknown reason, without it the view is not found
                 Thread.Sleep(WaitingTime ?? 1);
-                _virtualDesktopProvider.MoveToDesktop(hWnd, desktopId);
+                VirtualDesktopProvider.MoveToDesktop(hWnd, desktopId);
             }
 
             _windowService.MoveHalfSplit(hWnd, HalfSplit);
