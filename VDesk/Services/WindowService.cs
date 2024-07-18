@@ -15,12 +15,12 @@ namespace VDesk.Services
             switch (split)
             {
                 case HalfSplit.Left:
-                    Win32.MoveWindow(hWnd, 0, 0, (int)Win32.GetSystemMetrics((int)SM.CXMAXIMIZED) / 2,
-                        (int) (Win32.GetSystemMetrics((int)SM.CYMAXIMIZED) ), true);
+                    PInvoke.MoveWindow(hWnd, 0, 0, (int)PInvoke.GetSystemMetrics((int)SM.CXMAXIMIZED) / 2,
+                        (int) (PInvoke.GetSystemMetrics((int)SM.CYMAXIMIZED) ), true);
                     break;
                 case HalfSplit.Right:
-                    Win32.MoveWindow(hWnd, (int)(Win32.GetSystemMetrics((int)SM.CXMAXIMIZED) / 2) + 1, 0,
-                        (int)Win32.GetSystemMetrics((int)SM.CXMAXIMIZED) / 2, (int) (Win32.GetSystemMetrics((int)SM.CYMAXIMIZED)), true);
+                    PInvoke.MoveWindow(hWnd, (int)(PInvoke.GetSystemMetrics((int)SM.CXMAXIMIZED) / 2) + 1, 0,
+                        (int)PInvoke.GetSystemMetrics((int)SM.CXMAXIMIZED) / 2, (int) (PInvoke.GetSystemMetrics((int)SM.CYMAXIMIZED)), true);
                     break;
                 case null:
                     break;

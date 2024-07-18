@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "VDesk": {
+      "commandName": "Project",
+      "commandLineArgs": "run --on 2 --half-split right \"notepad\""
+    }
+  }
+}

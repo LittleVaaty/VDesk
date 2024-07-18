@@ -1,31 +1,42 @@
-﻿// using AutoFixture;
-// using McMaster.Extensions.CommandLineUtils;
-// using Microsoft.Extensions.Logging;
-// using VDesk.Commands;
-// using VDesk.Services;
-// using VDesk.Wrappers;
-//
-// namespace VDeskTests.Commands
-// {
-//     public class CreateCommandTest : TestingContext<CreateCommand>
-//     {
-//         [Fact]
-//         public void OnExecute_WhenThreeVirtualDesktop_ShouldCallCreateTwoTimes()
-//         {
-//             // Arrange
-//             var moqArray = new[]{new Mock<IVirtualDesktop>().Object, new Mock<IVirtualDesktop>().Object, new Mock<IVirtualDesktop>().Object};
-//             GetMockFor<IVirtualDesktopService>().Setup(s => s.GetDesktops()).Returns(moqArray);
-//             var commandLineApp = new CommandLineApplication();
-//             var command = new CreateCommand(GetMockFor<ILogger<CreateCommand>>().Object,GetMockFor<IVirtualDesktopService>().Object)
-//             {
-//                 Number = 5
-//             };
-//
-//             // Act
-//             command.Execute(commandLineApp);
-//
-//             // Assert
-//             GetMockFor<IVirtualDesktopService>().Verify(s => s.Create(), Times.Exactly(2));
-//         }
-//     }
-// }
+﻿using AutoFixture;
+using McMaster.Extensions.CommandLineUtils;
+using VDesk.Commands;
+using VDesk.Interop;
+
+namespace VDeskTests.Commands
+{
+    public class CreateCommandTest : TestingContext<CreateCommand>
+    {
+        [Fact]
+        public void OnExecute_WhenThreeVirtualDesktop_ShouldCallCreateTwoTimes()
+        {
+            // Arrange
+            var guidArray = Fixture.CreateMany<Guid>().ToList();
+            GetFakeFor<IVirtualDesktopProvider>().Setup(s => s.GetDesktop()).Returns(guidArray);
+            var commandLineApp = new CommandLineApplication();
+            ClassUnderTest.Number = 5;
+
+            // Act
+            ClassUnderTest.Execute(commandLineApp);
+
+            // Assert
+            GetFakeFor<IVirtualDesktopProvider>().Verify(s => s.CreateDesktop(), Times.Exactly(2));
+        }
+
+        [Fact]
+        public void OnExecute_WhenThreeVirtualDesktop_ShouldNeverCallCreate()
+        {
+            // Arrange
+            var guidArray = Fixture.CreateMany<Guid>().ToList();
+            GetFakeFor<IVirtualDesktopProvider>().Setup(s => s.GetDesktop()).Returns(guidArray);
+            var commandLineApp = new CommandLineApplication();
+            ClassUnderTest.Number = 3;
+
+            // Act
+            ClassUnderTest.Execute(commandLineApp);
+
+            // Assert
+            GetFakeFor<IVirtualDesktopProvider>().Verify(s => s.CreateDesktop(), Times.Never);
+        }
+    }
+}

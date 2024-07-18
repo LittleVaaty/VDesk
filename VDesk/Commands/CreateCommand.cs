@@ -1,21 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
-using VDesk.Core;
+using VDesk.Interop;
 
 namespace VDesk.Commands
 {
     [Command(Description = "Create virtual desktop")]
-    public class CreateCommand : VdeskCommandBase
+    public class CreateCommand(ILogger<CreateCommand> logger, IVirtualDesktopProvider virtualDesktopProvider) : VdeskCommandBase(logger, virtualDesktopProvider)
     {
-        private readonly IVirtualDesktopProvider _virtualDesktopProvider;
-        
-        public CreateCommand(ILogger<CreateCommand> logger, IVirtualDesktopProvider virtualDesktopProvider)
-            : base(logger)
-        {
-            _virtualDesktopProvider = virtualDesktopProvider;
-        }
-
         [Argument(0, Description = "Number of virtual desktop to create")]
         [Range(1, 100)]
         [Required]
@@ -23,11 +15,11 @@ namespace VDesk.Commands
         
         public override int Execute(CommandLineApplication app)
         {
-            var desktopIds = _virtualDesktopProvider.GetDesktop();
+            var desktopIds = VirtualDesktopProvider.GetDesktop();
 
-            while (Number > desktopIds.Length)
+            while (Number > desktopIds.Count)
             {
-                desktopIds = desktopIds.Append(_virtualDesktopProvider.Create()).ToArray();
+                desktopIds.Add(VirtualDesktopProvider.CreateDesktop());
             }
             
             return 0;

@@ -1,8 +1,8 @@
 ﻿using Microsoft.Win32;
 
-namespace VDesk.Utils
+namespace VDesk.Core
 {
-    public class OS
+    public static class Os
     {
         /// <summary>
         /// Return the OS Build number such as: 22621.2215
@@ -23,6 +23,6 @@ namespace VDesk.Utils
         /// <summary>
         /// 
         /// </summary>
-        public static readonly String VersionPrefix = "10.0.";
+        public static readonly string VersionPrefix = "10.0.";
     }
 }

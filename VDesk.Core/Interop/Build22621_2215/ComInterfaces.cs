@@ -1,15 +1,18 @@
 ﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
+using VDesk.Core.Interop.SharedCOM;
+
 // ReSharper disable InconsistentNaming
 
 namespace VDesk.Core.Interop.Build22621_2215;
 
-[ComImport]
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(BStrStringMarshaller))]
 [Guid("372e1d3b-38d3-42e4-a15b-8ab2b178f513")]
 [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-public interface IApplicationView
+internal partial interface IApplicationView
 {
     void GetIids(out ulong iidCount, out IntPtr iids);
-    HString GetRuntimeClassName();
+    [return: MarshalAs(UnmanagedType.LPWStr)] string GetRuntimeClassName();
     IntPtr GetTrustLevel();
     void SetFocus();
     void SwitchTo();
@@ -25,6 +28,7 @@ public interface IApplicationView
     [return: MarshalAs(UnmanagedType.LPWStr)]
     string GetAppUserModelId();
     void SetAppUserModelId([MarshalAs(UnmanagedType.LPWStr)] string id);
+    [return: MarshalAs(UnmanagedType.VariantBool)]
     bool IsEqualByAppUserModelId(string id);
     uint GetViewState();
     void SetViewState(uint state);
@@ -36,6 +40,7 @@ public interface IApplicationView
     int GetShowInSwitchers();
     void SetShowInSwitchers(int flag);
     int GetScaleFactor();
+    [return: MarshalAs(UnmanagedType.VariantBool)]
     bool CanReceiveInput();
     ApplicationViewCompatibilityPolicy GetCompatibilityPolicyType();
     void SetCompatibilityPolicyType(ApplicationViewCompatibilityPolicy flags);
@@ -47,8 +52,11 @@ public interface IApplicationView
     int QuerySizeConstraintsFromApp();
     void OnMinSizePreferencesUpdated(IntPtr hwnd);
     void ApplyOperation(IntPtr operation);
+    [return: MarshalAs(UnmanagedType.VariantBool)]
     bool IsTray();
+    [return: MarshalAs(UnmanagedType.VariantBool)]
     bool IsInHighZOrderBand();
+    [return: MarshalAs(UnmanagedType.VariantBool)]
     bool IsSplashScreenPresented();
     void Flash();
     IApplicationView GetRootSwitchableOwner();
@@ -57,46 +65,49 @@ public interface IApplicationView
     [return: MarshalAs(UnmanagedType.LPWStr)]
     string GetEnterpriseId();
 
+    [return: MarshalAs(UnmanagedType.VariantBool)]
     bool IsMirrored();
 }
 
-[ComImport]
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(BStrStringMarshaller))]
 [Guid("1841c6d7-4f9d-42c0-af41-8747538f10e5")]
 [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-public interface IApplicationViewCollection
+internal partial interface IApplicationViewCollection
 {
     IObjectArray GetViews();
     IObjectArray GetViewsByZOrder();
-    IObjectArray GetViewsByAppUserModelId(string id);
+    IObjectArray GetViewsByAppUserModelId([MarshalAs(UnmanagedType.LPWStr)] string id);
     IApplicationView GetViewForHwnd(IntPtr hwnd);
-    IApplicationView GetViewForApplication(object application);
-    IApplicationView GetViewForAppUserModelId(string id);
+    IApplicationView GetViewForApplication([MarshalAs(UnmanagedType.Interface)] object application);
+    IApplicationView GetViewForAppUserModelId([MarshalAs(UnmanagedType.LPWStr)] string id);
     IntPtr GetViewInFocus();
     void RefreshCollection();
-    int RegisterForApplicationViewChanges(object listener);
-    int RegisterForApplicationViewPositionChanges(object listener);
+    int RegisterForApplicationViewChanges([MarshalAs(UnmanagedType.Interface)] object listener);
+    int RegisterForApplicationViewPositionChanges([MarshalAs(UnmanagedType.Interface)] object listener);
     void UnregisterForApplicationViewChanges(int cookie);
 }
 
-[ComImport]
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(BStrStringMarshaller))]
 [Guid("3f07f4be-b107-441a-af0f-39d82529072c")]
 [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-internal interface IVirtualDesktop
+internal partial interface IVirtualDesktop
 {
+    [return: MarshalAs(UnmanagedType.VariantBool)]
     bool IsViewVisible(IApplicationView view);
     Guid GetID();
-    HString GetName();
-    HString GetWallpaperPath();
-    bool IsRemote();
+    [return: MarshalAs(UnmanagedType.LPWStr)] string GetName();
+    [return: MarshalAs(UnmanagedType.LPWStr)] string GetWallpaperPath();
+    [return: MarshalAs(UnmanagedType.VariantBool)] bool IsRemote();
 }
 
-[ComImport]
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(BStrStringMarshaller))]
 [Guid("a3175f2d-239c-4bd2-8aa0-eeba8b0b138e")]
 [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-internal interface IVirtualDesktopManagerInternal
+internal partial interface IVirtualDesktopManagerInternal
 {
     int GetCount();
     void MoveViewToDesktop(IApplicationView pView, IVirtualDesktop desktop);
+    [return: MarshalAs(UnmanagedType.VariantBool)]
     bool CanViewMoveDesktops(IApplicationView pView);
     IVirtualDesktop GetCurrentDesktop();
     IObjectArray GetDesktops();
@@ -107,45 +118,13 @@ internal interface IVirtualDesktopManagerInternal
     void RemoveDesktop(IVirtualDesktop pRemove, IVirtualDesktop pFallbackDesktop);
     IVirtualDesktop FindDesktop(in Guid desktopId);
     void GetDesktopSwitchIncludeExcludeViews(IVirtualDesktop desktop, out IObjectArray o1, out IObjectArray o2);
-    void SetDesktopName(IVirtualDesktop desktop, HString name);
-    void SetDesktopWallpaper(IVirtualDesktop desktop, HString path);
-    void UpdateWallpaperPathForAllDesktops(HString path);
+    void SetDesktopName(IVirtualDesktop desktop, [MarshalAs(UnmanagedType.LPWStr)] string name);
+    void SetDesktopWallpaper(IVirtualDesktop desktop, [MarshalAs(UnmanagedType.LPWStr)] string path);
+    void UpdateWallpaperPathForAllDesktops([MarshalAs(UnmanagedType.LPWStr)] string path);
     void CopyDesktopState(IApplicationView pView0, IApplicationView pView1);
-    IVirtualDesktop CreateRemoteDesktop(HString name);
+    IVirtualDesktop CreateRemoteDesktop([MarshalAs(UnmanagedType.LPWStr)] string name);
     void SwitchRemoteDesktop(IVirtualDesktop desktop);
     void SwitchDesktopWithAnimation(IVirtualDesktop desktop);
     IVirtualDesktop GetLastActiveDesktop();
     void WaitForAnimationToComplete();
-}
-
-[StructLayout(LayoutKind.Sequential)]
-public struct Size
-{
-    public int X;
-    public int Y;
-}
-
-[StructLayout(LayoutKind.Sequential)]
-public struct Rect
-{
-    public int Left;
-    public int Top;
-    public int Right;
-    public int Bottom;
-}
-
-public enum ApplicationViewCloakType
-{
-    AVCT_NONE = 0,
-    AVCT_DEFAULT = 1,
-    AVCT_VIRTUAL_DESKTOP = 2
-}
-
-public enum ApplicationViewCompatibilityPolicy
-{
-    AVCP_NONE = 0,
-    AVCP_SMALL_SCREEN = 1,
-    AVCP_TABLET_SMALL_SCREEN = 2,
-    AVCP_VERY_SMALL_SCREEN = 3,
-    AVCP_HIGH_SCALE_FACTOR = 4
 }

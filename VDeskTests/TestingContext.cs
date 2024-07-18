@@ -6,11 +6,12 @@ namespace VDeskTests;
 
 public abstract class TestingContext<T> where T: class  
 {  
-    private readonly Dictionary<Type, Mock> _injectedMocks = new Dictionary<Type, Mock>();  
-    private readonly Dictionary<Type, object> _injectedConcreteClasses = new Dictionary<Type, object>();  
+    private readonly Dictionary<Type, Mock> _injectedMocks = new();  
+    private readonly Dictionary<Type, object> _injectedConcreteClasses = new();  
     protected IFixture Fixture { get; } = new Fixture().Customize(new AutoMoqCustomization());
+    private T Instance;
 
-    protected Mock<TMockType> GetMockFor<TMockType>() where TMockType : class  
+    protected Mock<TMockType> GetFakeFor<TMockType>() where TMockType : class  
     {  
         var existingMock = _injectedMocks.FirstOrDefault(x => x.Key == typeof(TMockType));  
         if(existingMock.Key == null)  
@@ -36,5 +37,5 @@ public abstract class TestingContext<T> where T: class
         Fixture.Inject(injectedClass);  
     }  
       
-    public T ClassUnderTest => Fixture.Create<T>();  
+    public T ClassUnderTest => Instance ??= Fixture.Build<T>().OmitAutoProperties().Create();  
 }
