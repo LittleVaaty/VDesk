@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 using VDesk.Interop;
@@ -10,18 +11,18 @@ namespace VDesk.Commands
     {
         [Argument(0, Description = "Number of the virtual desktop to go to")]
         [Range(1, 100)]
-        public int Number { get; }
+        public int DesktopNumber { get; } = 1;
 
         public override int Execute(CommandLineApplication app)
         {
             var desktopIds = VirtualDesktopProvider.GetDesktop();
 
-            while (Number > desktopIds.Count)
+            while (DesktopNumber > desktopIds.Count)
             {
                 desktopIds.Add(VirtualDesktopProvider.CreateDesktop());
             }
 
-            VirtualDesktopProvider.Switch(desktopIds[Number - 1]);
+            VirtualDesktopProvider.Switch(desktopIds[DesktopNumber - 1]);
             
             return 0;
         }
