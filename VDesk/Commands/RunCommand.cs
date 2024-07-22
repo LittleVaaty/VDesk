@@ -17,7 +17,7 @@ namespace VDesk.Commands
 
         [Option("-o|--on", CommandOptionType.SingleValue, Description = "Desktop on witch the command is run")]
         [Range(1, 100)]
-        public int DesktopNumber { get; set; }
+        public int DesktopNumber { get; set; } = 1;
 
         [Argument(0, Description = "Command to execute")]
         [Required]
