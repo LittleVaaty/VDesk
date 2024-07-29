@@ -14,19 +14,16 @@ namespace VDesk.Commands
         protected readonly ILogger<VdeskCommandBase> Logger = logger;
         protected IVirtualDesktopProvider VirtualDesktopProvider = virtualDesktopProvider;
 
-        public abstract int Execute(CommandLineApplication app);
+        protected abstract int Execute(CommandLineApplication app);
 
-        // ReSharper disable once UnusedMember.Global
         public int OnExecute(CommandLineApplication app)
         {
             try
             {
-                if (Verbose.HasValue && Verbose.Value)
-                {
-                    Logger.LogInformation($"OS Build: {Os.Build}");
-                    Logger.LogInformation($"Working Directory: {Directory.GetCurrentDirectory()}");
-                    Logger.LogInformation($"Provider: {VirtualDesktopProvider.GetType()}");
-                }
+                if (!Verbose.HasValue || !Verbose.Value) return Execute(app);
+                Logger.LogInformation($"OS Build: {Os.Build}");
+                Logger.LogInformation($"Working Directory: {Directory.GetCurrentDirectory()}");
+                Logger.LogInformation($"Provider: {VirtualDesktopProvider.GetType()}");
 
                 return Execute(app);
             }

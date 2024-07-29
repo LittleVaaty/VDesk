@@ -91,13 +91,11 @@ internal partial interface IApplicationViewCollection
 [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 internal partial interface IVirtualDesktop
 {
-    [return: MarshalAs(UnmanagedType.VariantBool)]
-    bool IsViewVisible(IApplicationView view);
+    [return: MarshalAs(UnmanagedType.VariantBool)] bool IsViewVisible(IApplicationView view);
     Guid GetID();
-    [return: MarshalAs(UnmanagedType.LPWStr)] string GetName();
-    [return: MarshalAs(UnmanagedType.LPWStr)] string GetWallpaperPath();
-    [return: MarshalAs(UnmanagedType.VariantBool)]
-    bool IsRemote();
+    HString GetName();
+    HString  GetWallpaperPath();
+    [return: MarshalAs(UnmanagedType.VariantBool)] bool IsRemote();
 }
 
 [GeneratedComInterface(StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(BStrStringMarshaller))]
@@ -118,7 +116,7 @@ internal partial interface IVirtualDesktopManagerInternal
     void RemoveDesktop(IVirtualDesktop pRemove, IVirtualDesktop pFallbackDesktop);
     IVirtualDesktop FindDesktop(in Guid desktopId);
     void GetDesktopSwitchIncludeExcludeViews(IVirtualDesktop desktop, out IObjectArray o1, out IObjectArray o2);
-    void SetDesktopName(IVirtualDesktop desktop, [MarshalAs(UnmanagedType.LPWStr)] string name);
+    void SetDesktopName(IVirtualDesktop desktop, HString name);
     void SetDesktopWallpaper(IVirtualDesktop desktop, [MarshalAs(UnmanagedType.LPWStr)] string path);
     void UpdateWallpaperPathForAllDesktops([MarshalAs(UnmanagedType.LPWStr)] string path);
     void CopyDesktopState(IApplicationView pView0, IApplicationView pView1);

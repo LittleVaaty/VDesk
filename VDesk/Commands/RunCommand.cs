@@ -34,7 +34,7 @@ namespace VDesk.Commands
         [Option("-w|--waiting", Description = "Time in milisecond to wait after the star of the process before trying to move it.")] 
         public int? WaitingTime { get; set; }
 
-        public override int Execute(CommandLineApplication app)
+        protected override int Execute(CommandLineApplication app)
         {
             if (Verbose.HasValue && Verbose.Value)
             {

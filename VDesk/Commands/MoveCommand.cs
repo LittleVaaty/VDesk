@@ -28,7 +28,7 @@ namespace VDesk.Commands
         [Option("--half-split")]
         public HalfSplit? HalfSplit { get; set; }
 
-        public override int Execute(CommandLineApplication app)
+        protected override int Execute(CommandLineApplication app)
         {
             var process = Process.GetProcessesByName(ProcessName).FirstOrDefault();
             if (process is null)

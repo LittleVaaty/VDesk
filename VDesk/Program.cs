@@ -25,6 +25,7 @@ static class VDesk
             {
                 services.AddScoped<IWindowService, WindowService>();
                 services.AddScoped<IProcessService, ProcessService>();
+                services.AddScoped<IConsole, ConsoleWapper>();
                 services.AddVirtualDesktop();
             })
             .RunCommandLineApplicationAsync<VdeskCommand>(args);

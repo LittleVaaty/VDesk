@@ -91,14 +91,13 @@ internal partial interface IApplicationViewCollection
 [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 internal partial interface IVirtualDesktop
 {
-    [return: MarshalAs(UnmanagedType.VariantBool)]
-    bool IsViewVisible(IApplicationView view);
+    [return: MarshalAs(UnmanagedType.VariantBool)] bool IsViewVisible(IApplicationView view);
     Guid GetID();
-    [return: MarshalAs(UnmanagedType.LPWStr)] string GetName();
-    [return: MarshalAs(UnmanagedType.LPWStr)] string GetWallpaperPath();
-    [return: MarshalAs(UnmanagedType.VariantBool)]
-    bool IsRemote();
+    HString GetName();
+    HString  GetWallpaperPath();
+    [return: MarshalAs(UnmanagedType.VariantBool)] bool IsRemote();
 }
+
 
 [GeneratedComInterface(StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(BStrStringMarshaller))]
 [Guid("A3175F2D-239C-4BD2-8AA0-EEBA8B0B138E")]

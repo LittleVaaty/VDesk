@@ -150,9 +150,9 @@ internal partial interface IVirtualDesktop
 
     IntPtr Proc5();
 
-    [return: MarshalAs(UnmanagedType.LPWStr)] string GetName();
+    HString GetName();
 
-    [return: MarshalAs(UnmanagedType.LPWStr)] string GetWallpaperPath();
+    HString GetWallpaperPath();
 }
 
 [ComImport]

@@ -2,7 +2,7 @@
   "profiles": {
     "VDesk": {
       "commandName": "Project",
-      "commandLineArgs": "switch --help"
+      "commandLineArgs": "set-name --help"
     }
   }
 }

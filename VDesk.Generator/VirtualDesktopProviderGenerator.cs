@@ -21,7 +21,7 @@ public class VirtualDesktopProviderGenerator : IIncrementalGenerator
 
         var compilation = context.CompilationProvider.Combine(provider.Collect());
 
-        context.RegisterSourceOutput(compilation, (context, data) =>
+        context.RegisterSourceOutput(compilation, (sourceProductionContext, data) =>
         {
             foreach (var syntax in data.Right)
             {
@@ -32,20 +32,25 @@ public class VirtualDesktopProviderGenerator : IIncrementalGenerator
                 var hasMoveToDesktopMethod = syntax.Syntax.Members.Any(m => m is MethodDeclarationSyntax { Identifier.Text: "MoveToDesktop" });
                 var hasSwitchToDesktopMethod = syntax.Syntax.Members.Any(m => m is MethodDeclarationSyntax { Identifier.Text: "Switch" });
                 var hasSetDesktopNameMethod = syntax.Syntax.Members.Any(m => m is MethodDeclarationSyntax { Identifier.Text: "SetDesktopName" });
+                var hasGetDesktopNameMethod = syntax.Syntax.Members.Any(m => m is MethodDeclarationSyntax { Identifier.Text: "GetDesktopName" });
+                
 
-                var theCode = GetVirtualDesktopProviderCode(syntax.Symbol.ContainingNamespace.ToDisplayString(), hasCreateDesktopMethod, hasGetDesktopMethod, hasMoveToDesktopMethod, hasSwitchToDesktopMethod, hasSetDesktopNameMethod);
+                var theCode = GetVirtualDesktopProviderCode(syntax.Symbol.ContainingNamespace.ToDisplayString(), hasCreateDesktopMethod, hasGetDesktopMethod, hasMoveToDesktopMethod, hasSwitchToDesktopMethod, hasSetDesktopNameMethod, hasGetDesktopNameMethod);
 
-                context.AddSource($"{syntax.Symbol.ToDisplayString()}.cs", theCode);
+                sourceProductionContext.AddSource($"{syntax.Symbol.ToDisplayString()}.cs", theCode);
             }
         });
     }
 
-    private static string GetVirtualDesktopProviderCode(string fullNamespace, bool hasCreateDesktopMethod, bool hasGetDesktopMethod, bool hasMoveToDesktopMethod, bool hasSwitchToDesktopMethod, bool hasSetDesktopNameMethod)
+    private static string GetVirtualDesktopProviderCode(string fullNamespace, bool hasCreateDesktopMethod,
+        bool hasGetDesktopMethod, bool hasMoveToDesktopMethod, bool hasSwitchToDesktopMethod,
+        bool hasSetDesktopNameMethod, bool hasGetDesktopNameMethod)
     {
         return $$"""
                                 using FluentResults;
                                 using System.Runtime.InteropServices;
                                 using VDesk.Errors;
+                                using VDesk.Interop.SharedCOM;
                                 
                                 namespace {{fullNamespace}};
 
@@ -98,8 +103,28 @@ public class VirtualDesktopProviderGenerator : IIncrementalGenerator
                                 {{(!hasSwitchToDesktopMethod ? GetSwitchToDesktopCode() : string.Empty)}}
                                 
                                 {{(!hasSetDesktopNameMethod ? GetSetDesktopNameCode() : string.Empty)}}
+                                
+                                {{(!hasGetDesktopNameMethod ? GetGetDesktopNameCode() : string.Empty)}}
                                 }
                                 """;
+    }
+
+    private static string GetGetDesktopNameCode()
+    {
+        return """
+                   public string GetDesktopName(Guid virtualDesktopId)
+                   {
+                       if (_knownDesktops.TryGetValue(virtualDesktopId, out var virtualDesktop))
+                       {
+                            var t = _applicationViewCollection.GetViews();
+                            return virtualDesktop.GetName();
+                       }
+                       else
+                       {
+                           throw new KeyNotFoundException($"cannot found virtualdesktop with key {virtualDesktopId}");
+                       }
+                   }
+               """;
     }
 
     private static string GetSetDesktopNameCode()
@@ -109,7 +134,7 @@ public class VirtualDesktopProviderGenerator : IIncrementalGenerator
                    {
                        if (_knownDesktops.TryGetValue(virtualDesktopId, out var virtualDesktop))
                        {
-                           _virtualDesktopManagerInternal.SetDesktopName(virtualDesktop, name);
+                           _virtualDesktopManagerInternal.SetDesktopName(virtualDesktop, HString.FromString(name));
                        }
                        else
                        {

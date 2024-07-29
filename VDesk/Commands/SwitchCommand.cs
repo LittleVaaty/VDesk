@@ -13,7 +13,7 @@ namespace VDesk.Commands
         [Range(1, 100)]
         public int DesktopNumber { get; } = 1;
 
-        public override int Execute(CommandLineApplication app)
+        protected override int Execute(CommandLineApplication app)
         {
             var desktopIds = VirtualDesktopProvider.GetDesktop();
 
