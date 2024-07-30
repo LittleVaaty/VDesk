@@ -9,20 +9,19 @@ namespace VDesk.Commands
     [Command(Description = "Switch to a specific virtual desktop")]
     internal class SwitchCommand(ILogger<SwitchCommand> logger, IVirtualDesktopProvider virtualDesktopProvider) : VdeskCommandBase(logger, virtualDesktopProvider)
     {
-        [Argument(0, Description = "Number of the virtual desktop to go to")]
-        [Range(1, 100)]
-        public int DesktopNumber { get; } = 1;
-
-        public override int Execute(CommandLineApplication app)
+        [Argument(0, Description = "Name or Id of the virtual desktop")]
+        public string DesktopNameOrNumber { get; }
+        
+        protected override int Execute(CommandLineApplication app)
         {
             var desktopIds = VirtualDesktopProvider.GetDesktop();
 
-            while (DesktopNumber > desktopIds.Count)
-            {
-                desktopIds.Add(VirtualDesktopProvider.CreateDesktop());
-            }
+            var desktopId = GetDesktopIdByNameOrIndex(desktopIds, DesktopNameOrNumber);
 
-            VirtualDesktopProvider.Switch(desktopIds[DesktopNumber - 1]);
+            if (desktopId is null)
+                return -1;
+            
+            VirtualDesktopProvider.Switch(desktopId.Value);
             
             return 0;
         }

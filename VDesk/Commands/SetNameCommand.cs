@@ -12,9 +12,9 @@ public class SetNameCommand(ILogger<VdeskCommandBase> logger, IVirtualDesktopPro
     public int DesktopNumber { get; set; } = 1;
     
     [Argument(0, "name of the desktop")]
-    public string DesktopName { get; set; }
+    public required string DesktopName { get; set; }
 
-    public override int Execute(CommandLineApplication app)
+    protected override int Execute(CommandLineApplication app)
     {
         var desktops = VirtualDesktopProvider.GetDesktop();
 

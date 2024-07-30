@@ -17,7 +17,7 @@ namespace VDeskTests.Commands
             ClassUnderTest.Number = 5;
 
             // Act
-            ClassUnderTest.Execute(commandLineApp);
+            ClassUnderTest.OnExecute(commandLineApp);
 
             // Assert
             GetFakeFor<IVirtualDesktopProvider>().Verify(s => s.CreateDesktop(), Times.Exactly(2));
@@ -33,7 +33,7 @@ namespace VDeskTests.Commands
             ClassUnderTest.Number = 3;
 
             // Act
-            ClassUnderTest.Execute(commandLineApp);
+            ClassUnderTest.OnExecute(commandLineApp);
 
             // Assert
             GetFakeFor<IVirtualDesktopProvider>().Verify(s => s.CreateDesktop(), Times.Never);

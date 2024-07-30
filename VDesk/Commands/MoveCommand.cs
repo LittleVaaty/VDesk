@@ -15,8 +15,7 @@ namespace VDesk.Commands
         private readonly IProcessService _processService = processService;
 
         [Option("-o|--on", CommandOptionType.SingleValue, Description = "Desktop on witch the command is run")]
-        [Range(1, 10)]
-        public int DesktopNumber { get; set; } = 1;
+        public string DesktopNameOrNumber { get; set; } 
 
         [Argument(0, Description = "Process to move")]
         [Required]
@@ -28,7 +27,7 @@ namespace VDesk.Commands
         [Option("--half-split")]
         public HalfSplit? HalfSplit { get; set; }
 
-        public override int Execute(CommandLineApplication app)
+        protected override int Execute(CommandLineApplication app)
         {
             var process = Process.GetProcessesByName(ProcessName).FirstOrDefault();
             if (process is null)
@@ -40,21 +39,18 @@ namespace VDesk.Commands
             var hWnd = _processService.GetMainWindowHandle(process);
             var desktopIds = VirtualDesktopProvider.GetDesktop();
 
-            while (DesktopNumber > desktopIds.Count)
-            {
-                desktopIds.Add(VirtualDesktopProvider.CreateDesktop());
-            }
+            var desktopId = GetDesktopIdByNameOrIndex(desktopIds, DesktopNameOrNumber);
+            if (desktopId is null)
+                return -1;
 
-            var desktopId = desktopIds[DesktopNumber - 1];
-
-            VirtualDesktopProvider.MoveToDesktop(hWnd, desktopId);
+            VirtualDesktopProvider.MoveToDesktop(hWnd, desktopId.Value);
             
            _windowService.MoveHalfSplit(hWnd, HalfSplit); 
 
             if (NoSwitch.HasValue && NoSwitch.Value)
                 return 0;
 
-            VirtualDesktopProvider.Switch(desktopId);
+            VirtualDesktopProvider.Switch(desktopId.Value);
 
             return 0;
         }

@@ -16,9 +16,8 @@ namespace VDesk.Commands
         private readonly IWindowService _windowService = windowService;
 
         [Option("-o|--on", CommandOptionType.SingleValue, Description = "Desktop on witch the command is run")]
-        [Range(1, 100)]
-        public int DesktopNumber { get; set; } = 1;
-
+        public string DesktopNameOrNumber { get; set; }
+        
         [Argument(0, Description = "Command to execute")]
         [Required]
         public string Command { get; set; }
@@ -34,24 +33,16 @@ namespace VDesk.Commands
         [Option("-w|--waiting", Description = "Time in milisecond to wait after the star of the process before trying to move it.")] 
         public int? WaitingTime { get; set; }
 
-        public override int Execute(CommandLineApplication app)
+        protected override int Execute(CommandLineApplication app)
         {
-            if (Verbose.HasValue && Verbose.Value)
-            {
-                Logger.LogInformation($"Provider: {VirtualDesktopProvider.GetType()}");
-            }
-
             var desktopIds = VirtualDesktopProvider.GetDesktop();
 
-            while (DesktopNumber > desktopIds.Count)
-            {
-                desktopIds.Add(VirtualDesktopProvider.CreateDesktop());
-            }
-
-            var desktopId = desktopIds[DesktopNumber - 1];
+            var desktopId = GetDesktopIdByNameOrIndex(desktopIds, DesktopNameOrNumber);
+            if (desktopId is null)
+                return -1;
 
             if (!NoSwitch.HasValue || !NoSwitch.Value)
-                VirtualDesktopProvider.Switch(desktopId);
+                VirtualDesktopProvider.Switch(desktopId.Value);
 
             _processService.Start(Command, Arguments ?? string.Empty, out var hWnd);
 
@@ -59,7 +50,7 @@ namespace VDesk.Commands
             {
                 // For unknown reason, without it the view is not found
                 Thread.Sleep(WaitingTime ?? 1);
-                VirtualDesktopProvider.MoveToDesktop(hWnd, desktopId);
+                VirtualDesktopProvider.MoveToDesktop(hWnd, desktopId.Value);
             }
 
             _windowService.MoveHalfSplit(hWnd, HalfSplit);

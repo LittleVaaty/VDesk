@@ -2,7 +2,7 @@
   "profiles": {
     "VDesk": {
       "commandName": "Project",
-      "commandLineArgs": "switch --help"
+      "commandLineArgs": "run notepad --on test-5 -n"
     }
   }
 }

@@ -9,4 +9,9 @@ public partial class VirtualDesktopProvider : IVirtualDesktopProvider
     {
         throw new NotImplementedException();
     }
+    
+    public string GetDesktopName(Guid virtualDesktopId)
+    {
+        throw new NotImplementedException();
+    }
 }
