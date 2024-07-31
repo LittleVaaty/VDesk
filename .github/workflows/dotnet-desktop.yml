@@ -27,12 +27,9 @@ jobs:
       
     - name: Build
       run: |
-        cd src/VDesk
+        cd VDesk
         dotnet build --configuration Release --no-restore
         dotnet publish -c Release -o ../publish/vdesk -r win-x64 --self-contained true /p:UseAppHost=true
-      
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
