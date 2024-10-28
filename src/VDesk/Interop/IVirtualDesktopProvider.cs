@@ -8,4 +8,6 @@ public interface IVirtualDesktopProvider
     void Switch(Guid virtualDesktopId);
     void SetDesktopName(Guid virtualDesktopId, string name);
     string GetDesktopName(Guid virtualDesktopId);
+    int GetDesktopsCount();
+    Guid GetCurrentDesktop();
 }

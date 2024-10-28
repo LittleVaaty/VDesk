@@ -1,18 +1,9 @@
 ﻿using System.Diagnostics;
-using VDesk.Wrappers;
+using NativeMethods = VDesk.Interop.NativeMethods;
 
 namespace VDesk.Services
 {
-    public interface IProcessService
-    {
-        Process? Start(ProcessStartInfo processInfo);
-
-        Process? Start(string command, string arguments, out IntPtr hWnd);
-
-        IntPtr GetMainWindowHandle(Process process);
-    }
-
-    public class ProcessService : IProcessService
+    public class ProcessService
     {
 
         public Process? Start(ProcessStartInfo processInfo)
@@ -35,6 +26,12 @@ namespace VDesk.Services
             }
 
             var process = Process.Start(startInfo);
+            if (process is null)
+            {
+                hWnd = IntPtr.Zero;
+                return null;
+            }
+            
             hWnd = GetMainWindowHandle(process);
             return process;
         }
@@ -45,8 +42,8 @@ namespace VDesk.Services
             Process foregroundProcess;
             do
             {
-                hWnd = PInvoke.GetForegroundWindow();
-                PInvoke.GetWindowThreadProcessId(hWnd, out var processId);
+                hWnd = NativeMethods.GetForegroundWindow();
+                NativeMethods.GetWindowThreadProcessId(hWnd, out var processId);
                 foregroundProcess = Process.GetProcessById(processId);
             } while (foregroundProcess.ProcessName != process.ProcessName);
 

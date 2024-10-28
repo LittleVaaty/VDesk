@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -7,16 +9,30 @@ namespace VDesk.Generator;
 [Generator]
 public class VirtualDesktopProviderGenerator : IIncrementalGenerator
 {
+    private readonly Dictionary<string, string> _methodsImplementation = new()
+    {
+        { "CreateDesktop", GetCreateDesktopCode() },
+        { "GetDesktopsCount", GetGetDesktopsCountCode() },
+        { "GetCurrentDesktop", GetGetCurrentDesktopCode() },
+        { "GetDesktop", GetGetDesktopCode() },
+        { "MoveToDesktop", GetMoveToDesktopCode() },
+        { "Switch", GetSwitchToDesktopCode() },
+        { "SetDesktopName", GetSetDesktopNameCode() },
+        { "GetDesktopName", GetGetDesktopNameCode() },
+    };
+
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
 //#if DEBUG
 //        if (!Debugger.IsAttached) Debugger.Launch();
 //#endif
 
-        var provider = context.SyntaxProvider.ForAttributeWithMetadataName("VDesk.Generator.GeneratedVirtualDesktopProviderAttribute",
-            predicate: static (node, _) => node is ClassDeclarationSyntax,
-            transform: static (ctx, _) => ctx.TargetSymbol is INamedTypeSymbol classSymbol
-            ? new { Syntax = (ClassDeclarationSyntax) ctx.TargetNode, Symbol = classSymbol } : null)
+        var provider = context.SyntaxProvider.ForAttributeWithMetadataName(
+                "VDesk.Generator.GeneratedVirtualDesktopProviderAttribute",
+                predicate: static (node, _) => node is ClassDeclarationSyntax,
+                transform: static (ctx, _) => ctx.TargetSymbol is INamedTypeSymbol classSymbol
+                    ? new { Syntax = (ClassDeclarationSyntax)ctx.TargetNode, Symbol = classSymbol }
+                    : null)
             .Where(m => m is not null);
 
         var compilation = context.CompilationProvider.Combine(provider.Collect());
@@ -25,88 +41,107 @@ public class VirtualDesktopProviderGenerator : IIncrementalGenerator
         {
             foreach (var syntax in data.Right)
             {
-                if(syntax is null) continue;
+                if (syntax is null) continue;
 
-                var hasCreateDesktopMethod = syntax.Syntax.Members.Any(m => m is MethodDeclarationSyntax { Identifier.Text: "CreateDesktop" });
-                var hasGetDesktopMethod = syntax.Syntax.Members.Any(m => m is MethodDeclarationSyntax { Identifier.Text: "GetDesktop" });
-                var hasMoveToDesktopMethod = syntax.Syntax.Members.Any(m => m is MethodDeclarationSyntax { Identifier.Text: "MoveToDesktop" });
-                var hasSwitchToDesktopMethod = syntax.Syntax.Members.Any(m => m is MethodDeclarationSyntax { Identifier.Text: "Switch" });
-                var hasSetDesktopNameMethod = syntax.Syntax.Members.Any(m => m is MethodDeclarationSyntax { Identifier.Text: "SetDesktopName" });
-                var hasGetDesktopNameMethod = syntax.Syntax.Members.Any(m => m is MethodDeclarationSyntax { Identifier.Text: "GetDesktopName" });
-                
-
-                var theCode = GetVirtualDesktopProviderCode(syntax.Symbol.ContainingNamespace.ToDisplayString(), hasCreateDesktopMethod, hasGetDesktopMethod, hasMoveToDesktopMethod, hasSwitchToDesktopMethod, hasSetDesktopNameMethod, hasGetDesktopNameMethod);
+                var theCode = GetVirtualDesktopProviderCode(syntax.Symbol.ContainingNamespace.ToDisplayString(), syntax.Syntax.Members);
 
                 sourceProductionContext.AddSource($"{syntax.Symbol.ToDisplayString()}.cs", theCode);
             }
         });
     }
 
-    private static string GetVirtualDesktopProviderCode(string fullNamespace, bool hasCreateDesktopMethod,
-        bool hasGetDesktopMethod, bool hasMoveToDesktopMethod, bool hasSwitchToDesktopMethod,
-        bool hasSetDesktopNameMethod, bool hasGetDesktopNameMethod)
+    private string GetVirtualDesktopProviderCode(string fullNamespace, SyntaxList<MemberDeclarationSyntax> members)
     {
         return $$"""
-                                using FluentResults;
-                                using System.Runtime.InteropServices;
-                                using VDesk.Errors;
-                                using VDesk.Interop.SharedCOM;
-                                
-                                namespace {{fullNamespace}};
+                 using FluentResults;
+                 using System.Runtime.InteropServices;
+                 using VDesk.Errors;
+                 using VDesk.Interop.SharedCOM;
 
-                                public partial class VirtualDesktopProvider 
-                                {
-                                    private readonly IVirtualDesktopManagerInternal _virtualDesktopManagerInternal;
-                                    private readonly IApplicationViewCollection _applicationViewCollection;
-                                    private Dictionary<Guid, IVirtualDesktop> _knownDesktops = new();
-                                    
-                                    private VirtualDesktopProvider(IVirtualDesktopManagerInternal virtualDesktopManagerInternal, IApplicationViewCollection applicationViewCollection)
-                                    {
-                                        _virtualDesktopManagerInternal = virtualDesktopManagerInternal;
-                                        _applicationViewCollection = applicationViewCollection;
-                                    }
-                                    
-                                
-                                    public static VirtualDesktopProvider Create()
-                                    {
-                                        
-                                        var resultApplicationViewCollection = CreateInstance<IApplicationViewCollection>(null);
-                                        var resultVirtualDesktopManagerInternal = CreateInstance<IVirtualDesktopManagerInternal>(CLSID.VirtualDesktopManagerInternal);
-                                    
-                                        return new VirtualDesktopProvider(resultVirtualDesktopManagerInternal.Value, resultApplicationViewCollection.Value);
-                                    }
-                                    
-                                    protected static Result<T> CreateInstance<T>(Guid? guidService)
-                                    {
-                                        try
-                                        {
-                                            var clsid = CLSID.ImmersiveShell;
-                                            var iid = new Guid(SharedCOM.IServiceProvider.IID);
-                                            var hr = Ole32.CoCreateInstance(ref clsid, /* No aggregation */ 0, (uint)Ole32.CLSCTX.CLSCTX_LOCAL_SERVER, ref iid, out object comObject);
-                                            Marshal.ThrowExceptionForHR(hr);
-                                            var serviceProvider = (SharedCOM.IServiceProvider)comObject;
-                                            var instance = serviceProvider.QueryService(guidService ?? typeof(T).GUID, typeof(T).GUID);
-                                            return Result.Ok((T) instance);
-                                        }
-                                        catch (Exception)
-                                        {
-                                            return Result.Fail(new InitializationError(typeof(T)));
-                                        }
-                                    }
-                                    
-                                {{(!hasCreateDesktopMethod ? GetCreateDesktopCode() : string.Empty)}}
-                                
-                                {{(!hasGetDesktopMethod ? GetGetDesktopCode() : string.Empty)}}
-                                
-                                {{(!hasMoveToDesktopMethod ? GetMoveToDesktopCode() : string.Empty)}}
-                                
-                                {{(!hasSwitchToDesktopMethod ? GetSwitchToDesktopCode() : string.Empty)}}
-                                
-                                {{(!hasSetDesktopNameMethod ? GetSetDesktopNameCode() : string.Empty)}}
-                                
-                                {{(!hasGetDesktopNameMethod ? GetGetDesktopNameCode() : string.Empty)}}
-                                }
-                                """;
+                 namespace {{fullNamespace}};
+
+                 public partial class VirtualDesktopProvider 
+                 {
+                     private readonly IVirtualDesktopManagerInternal _virtualDesktopManagerInternal;
+                     private readonly IApplicationViewCollection _applicationViewCollection;
+                     private Dictionary<Guid, IVirtualDesktop> _knownDesktops = new();
+                     
+                     private VirtualDesktopProvider(IVirtualDesktopManagerInternal virtualDesktopManagerInternal, IApplicationViewCollection applicationViewCollection)
+                     {
+                         _virtualDesktopManagerInternal = virtualDesktopManagerInternal;
+                         _applicationViewCollection = applicationViewCollection;
+                     }
+                     
+                 
+                     public static VirtualDesktopProvider Create()
+                     {
+                         
+                         var resultApplicationViewCollection = CreateInstance<IApplicationViewCollection>(null);
+                         var resultVirtualDesktopManagerInternal = CreateInstance<IVirtualDesktopManagerInternal>(CLSID.VirtualDesktopManagerInternal);
+                     
+                         return new VirtualDesktopProvider(resultVirtualDesktopManagerInternal.Value, resultApplicationViewCollection.Value);
+                     }
+                     
+                     protected static Result<T> CreateInstance<T>(Guid? guidService)
+                     {
+                         try
+                         {
+                             var clsid = CLSID.ImmersiveShell;
+                             var iid = new Guid(SharedCOM.IServiceProvider.IID);
+                             var hr = Ole32.CoCreateInstance(ref clsid, /* No aggregation */ 0, (uint)Ole32.CLSCTX.CLSCTX_LOCAL_SERVER, ref iid, out object comObject);
+                             Marshal.ThrowExceptionForHR(hr);
+                             var serviceProvider = (SharedCOM.IServiceProvider)comObject;
+                             var instance = serviceProvider.QueryService(guidService ?? typeof(T).GUID, typeof(T).GUID);
+                             return Result.Ok((T) instance);
+                         }
+                         catch (Exception)
+                         {
+                             return Result.Fail(new InitializationError(typeof(T)));
+                         }
+                     }
+                 {{AddMethodsCode(members)}}  
+                 }
+                 """;
+    }
+
+    private string AddMethodsCode(SyntaxList<MemberDeclarationSyntax> members)
+    {
+        var code = string.Empty;
+
+        foreach (var methodTuple in _methodsImplementation)
+        {
+            var hasMethod = members.Any(m =>
+                m is MethodDeclarationSyntax syntax && syntax.Identifier.Text == methodTuple.Key);
+            if (!hasMethod)
+                code += $"""
+                        
+                        {methodTuple.Value}
+                        
+                        """;
+        }
+
+        return code;
+    }
+
+    private static string GetGetCurrentDesktopCode()
+    {
+        return """
+                   public Guid GetCurrentDesktop()
+                   {
+                       var currentDesktop = _virtualDesktopManagerInternal.GetCurrentDesktop();
+                       return currentDesktop.GetID();
+                   }
+               """;
+    }
+
+    private static string GetGetDesktopsCountCode()
+    {
+        return """
+                   public int GetDesktopsCount()                                    
+                   {
+                       return _virtualDesktopManagerInternal.GetCount();
+                   }
+               """;
     }
 
     private static string GetGetDesktopNameCode()
@@ -199,7 +234,7 @@ public class VirtualDesktopProviderGenerator : IIncrementalGenerator
                    public IList<Guid> GetDesktop()
                    {
                        var array = _virtualDesktopManagerInternal.GetDesktops();
-                       if (array == null) new List<Guid>();
+                       if (array == null) return new List<Guid>();
                    
                        var count = array.GetCount();
                        var vdType = typeof(IVirtualDesktop);
@@ -215,4 +250,3 @@ public class VirtualDesktopProviderGenerator : IIncrementalGenerator
                """;
     }
 }
-

@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
 
-namespace VDesk;
+namespace VDesk.Interop;
 
 internal static partial class Ole32
 {

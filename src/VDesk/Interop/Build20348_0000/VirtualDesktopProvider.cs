@@ -8,14 +8,14 @@ public partial class VirtualDesktopProvider : IVirtualDesktopProvider
     public IList<Guid> GetDesktop()
     {
         var array = _virtualDesktopManagerInternal.GetDesktops(IntPtr.Zero);
-        if (array == null) new List<Guid>();
+        if (array == null) return new List<Guid>();
 
         var count = array.GetCount();
         var vdType = typeof(IVirtualDesktop);
 
         for (var i = 0u; i < count; i++)
         {
-            var ppvObject = (IVirtualDesktop) array.GetAt(i, vdType.GUID);
+            var ppvObject = (IVirtualDesktop)array.GetAt(i, vdType.GUID);
             _knownDesktops.Add(ppvObject.GetID(), ppvObject);
         }
 
@@ -41,5 +41,16 @@ public partial class VirtualDesktopProvider : IVirtualDesktopProvider
         {
             throw new KeyNotFoundException($"cannot found virtualdesktop with key {virtualDesktopId}");
         }
+    }
+
+    public int GetDesktopsCount()
+    {
+        return _virtualDesktopManagerInternal.GetCount(IntPtr.Zero);
+    }
+
+    public Guid GetCurrentDesktop()
+    {
+        var currentDesktop = _virtualDesktopManagerInternal.GetCurrentDesktop(IntPtr.Zero);
+        return currentDesktop.GetID();
     }
 }

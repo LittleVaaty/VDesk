@@ -1,6 +1,4 @@
-using AutoFixture;
 using AutoFixture.AutoMoq;
-using VDesk.Wrappers;
 
 namespace VDeskTests;
 

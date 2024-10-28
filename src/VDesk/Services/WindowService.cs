@@ -1,26 +1,22 @@
-﻿using VDesk.Utils;
-using VDesk.Wrappers;
+﻿using VDesk.Interop;
+using VDesk.Utils;
+using NativeMethods = VDesk.Interop.NativeMethods;
 
 namespace VDesk.Services
 {
-    public interface IWindowService
-    {
-        void MoveHalfSplit(IntPtr hWnd, HalfSplit? split);
-    }
-
-    public class WindowService : IWindowService
+    public class WindowService
     {
         public void MoveHalfSplit(IntPtr hWnd, HalfSplit? split)
         {
             switch (split)
             {
                 case HalfSplit.Left:
-                    PInvoke.MoveWindow(hWnd, 0, 0, (int)PInvoke.GetSystemMetrics((int)SM.CXMAXIMIZED) / 2,
-                        (int) (PInvoke.GetSystemMetrics((int)SM.CYMAXIMIZED) ), true);
+                    NativeMethods.MoveWindow(hWnd, 0, 0, (int)NativeMethods.GetSystemMetrics((int)SM.CXMAXIMIZED) / 2,
+                        (int) (NativeMethods.GetSystemMetrics((int)SM.CYMAXIMIZED) ), true);
                     break;
                 case HalfSplit.Right:
-                    PInvoke.MoveWindow(hWnd, (int)(PInvoke.GetSystemMetrics((int)SM.CXMAXIMIZED) / 2) + 1, 0,
-                        (int)PInvoke.GetSystemMetrics((int)SM.CXMAXIMIZED) / 2, (int) (PInvoke.GetSystemMetrics((int)SM.CYMAXIMIZED)), true);
+                    NativeMethods.MoveWindow(hWnd, (int)(NativeMethods.GetSystemMetrics((int)SM.CXMAXIMIZED) / 2) + 1, 0,
+                        (int)NativeMethods.GetSystemMetrics((int)SM.CXMAXIMIZED) / 2, (int) (NativeMethods.GetSystemMetrics((int)SM.CYMAXIMIZED)), true);
                     break;
                 case null:
                     break;
