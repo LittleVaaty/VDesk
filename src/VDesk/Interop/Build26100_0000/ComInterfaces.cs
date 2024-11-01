@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices.Marshalling;
 using VDesk.Interop.SharedCOM;
 
-namespace VDesk.Interop.Build24000_0000;
+namespace VDesk.Interop.Build26100_0000;
 
 [GeneratedComInterface(StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(BStrStringMarshaller))]
 [Guid("372e1d3b-38d3-42e4-a15b-8ab2b178f513")]
@@ -104,22 +104,22 @@ internal partial interface IVirtualDesktopManagerInternal
 {
     int GetCount();
     void MoveViewToDesktop(IApplicationView pView, IVirtualDesktop desktop);
-    [return: MarshalAs(UnmanagedType.VariantBool)]
-    bool CanViewMoveDesktops(IApplicationView pView);
+    [return: MarshalAs(UnmanagedType.VariantBool)] bool CanViewMoveDesktops(IApplicationView pView);
     IVirtualDesktop GetCurrentDesktop();
     IObjectArray GetDesktops();
     IVirtualDesktop GetAdjacentDesktop(IVirtualDesktop pDesktopReference, int uDirection);
     void SwitchDesktop(IVirtualDesktop desktop);
+    void SwitchDesktopAndMoveForegroundView(IVirtualDesktop desktop);
     IVirtualDesktop CreateDesktop();
     void MoveDesktop(IVirtualDesktop desktop, int nIndex);
     void RemoveDesktop(IVirtualDesktop pRemove, IVirtualDesktop pFallbackDesktop);
     IVirtualDesktop FindDesktop(in Guid desktopId);
     void GetDesktopSwitchIncludeExcludeViews(IVirtualDesktop desktop, out IObjectArray o1, out IObjectArray o2);
     void SetDesktopName(IVirtualDesktop desktop, HString name);
-    void SetDesktopWallpaper(IVirtualDesktop desktop, [MarshalAs(UnmanagedType.LPWStr)] string path);
-    void UpdateWallpaperPathForAllDesktops([MarshalAs(UnmanagedType.LPWStr)] string path);
+    void SetDesktopWallpaper(IVirtualDesktop desktop, HString path);
+    void UpdateWallpaperPathForAllDesktops(HString path);
     void CopyDesktopState(IApplicationView pView0, IApplicationView pView1);
-    IVirtualDesktop CreateRemoteDesktop([MarshalAs(UnmanagedType.LPWStr)] string name);
+    IVirtualDesktop CreateRemoteDesktop(HString name);
     void SwitchRemoteDesktop(IVirtualDesktop desktop);
     void SwitchDesktopWithAnimation(IVirtualDesktop desktop);
     IVirtualDesktop GetLastActiveDesktop();

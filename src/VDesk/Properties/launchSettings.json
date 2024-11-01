@@ -2,7 +2,7 @@
   "profiles": {
     "VDesk": {
       "commandName": "Project",
-      "commandLineArgs": ""
+      "commandLineArgs": "run -o 2 -n notepad"
     }
   }
 }

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using VDesk.Utils;
+﻿using VDesk.Utils;
 
 namespace VDesk.Interop;
 
@@ -11,6 +10,7 @@ public static class VirtualDesktopProviderBuilder
 
         return version switch
         {
+           not null when version >= new Version(10, 0, 26100, 2033) => Build26100_0000.VirtualDesktopProvider.Create(),
            not null when version >= new Version(10, 0, 22631, 3155) => Build22631_3155.VirtualDesktopProvider.Create(),
            not null when version >= new Version(10, 0, 22631, 2428) =>  Build22631_2428.VirtualDesktopProvider.Create(),
            not null when version >= new Version(10, 0, 22621, 3155) => Build22621_3155.VirtualDesktopProvider.Create(),
