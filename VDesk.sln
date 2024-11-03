@@ -3,11 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VDesk", "VDesk\VDesk.csproj", "{B50ECB11-525C-4629-9C2D-0E33CEB18015}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VDesk", "src\VDesk\VDesk.csproj", "{B50ECB11-525C-4629-9C2D-0E33CEB18015}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VDeskTests", "VDeskTests\VDeskTests.csproj", "{6A3543B1-68E0-48EC-B43B-DAB60EB134FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VDeskTests", "test\VDeskTests\VDeskTests.csproj", "{6A3543B1-68E0-48EC-B43B-DAB60EB134FF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VDesk.Generator", "VDesk.Generator\VDesk.Generator.csproj", "{5760C428-0CC2-4C20-A5DC-4C095D00658E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VDesk.Generator", "src\VDesk.Generator\VDesk.Generator.csproj", "{5760C428-0CC2-4C20-A5DC-4C095D00658E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{C274D7E9-1035-48F2-BFD9-269D9724E984}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		global.json = global.json
+		license.md = license.md
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

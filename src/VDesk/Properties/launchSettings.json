@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "VDesk": {
+      "commandName": "Project",
+      "commandLineArgs": "run -o 2 -n notepad"
+    }
+  }
+}
