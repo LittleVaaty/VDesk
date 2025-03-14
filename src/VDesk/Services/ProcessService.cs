@@ -5,12 +5,11 @@ namespace VDesk.Services
 {
     public class ProcessService
     {
-
         public Process? Start(ProcessStartInfo processInfo)
         {
             return Process.Start(processInfo);
         }
-        
+
         public Process? Start(string command, string arguments, out IntPtr hWnd)
         {
             var startInfo = new ProcessStartInfo(command, arguments);
@@ -25,13 +24,23 @@ namespace VDesk.Services
                 //Don't really want to do anything here.
             }
 
-            var process = Process.Start(startInfo);
+            var process = new Process
+            {
+                StartInfo = startInfo
+            };
+            using (var reaper = new ProcessReaper(process))
+            {
+                process.Start();
+                reaper.NotifyProcessStarted();
+                process.WaitForExit();
+            }
+
             if (process is null)
             {
                 hWnd = IntPtr.Zero;
                 return null;
             }
-            
+
             hWnd = GetMainWindowHandle(process);
             return process;
         }
