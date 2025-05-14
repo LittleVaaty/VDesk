@@ -1,11 +1,6 @@
 name: .NET Core Desktop
 
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
+on: workflow_dispatch
 jobs:
   build:
     runs-on: windows-latest 
@@ -29,7 +24,7 @@ jobs:
       run: |
         cd VDesk
         dotnet build --configuration Release --no-restore
-        dotnet publish -c Release -o ../publish/vdesk -r win-x64 --self-contained true /p:UseAppHost=true
+        dotnet publish -c Release -o ../publish/vdesk -r win-x64
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
