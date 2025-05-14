@@ -2,15 +2,16 @@
 
 namespace VDesk.Commands.Switch;
 
-public class SwitchCommandParser
+public static class SwitchCommandParser
 {
-    private static readonly CliCommand Command = ConstructCommand();
 
-    public static readonly CliArgument<string> IndexOrNameArgument = new("index or name")
+    public static readonly CliArgument<string> IndexOrNameArgument = new("index")
     {
         Description = "Desktop on witch the command is run",
     };
 
+    private static readonly CliCommand Command = ConstructCommand();
+    
     public static CliCommand GetCommand()
     {
         return Command;

@@ -3,7 +3,7 @@ using VDesk.Utils;
 
 namespace VDesk.Commands.Move;
 
-public class MoveCommandParser
+public static class MoveCommandParser
 {
     public static readonly CliOption<string> IndexOrNameOptions = new("--on", "-o")
     {
