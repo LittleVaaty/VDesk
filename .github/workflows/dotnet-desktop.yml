@@ -27,7 +27,7 @@ jobs:
         dotnet publish -c Release -o ../publish/vdesk -r win-x64
 
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: vdesk Package
         path: publish/vdesk
