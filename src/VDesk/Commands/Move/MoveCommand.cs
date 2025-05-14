@@ -38,8 +38,8 @@ public class MoveCommand : BaseCommand
 
     private int Execute()
     {
-        var process = Process.GetProcessesByName(ProcessName).FirstOrDefault();
-        if (process is null)
+        var process = Process.GetProcessesByName(ProcessName);
+        if (process.Length == 0)
         {
             Console.WriteLine($"Process {ProcessName} not found");
             return 1;

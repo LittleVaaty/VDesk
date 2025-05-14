@@ -23,6 +23,7 @@ internal static partial class NativeMethods
     {
         internal enum JobObjectInfoClass : uint
         {
+            JobObjectBasicProcessIdList = 3,
             JobObjectExtendedLimitInformation = 9,
         }
 
@@ -68,10 +69,16 @@ internal static partial class NativeMethods
             public UIntPtr PeakJobMemoryUsed;
         }
 
-        internal const int ProcessBasicInformation = 0;
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct JobObjectBasicProcessIdList
+        {
+            public uint NumberOfAssignedProcesses;
+            public uint NumberOfProcessIdsInList;
+            public IntPtr[] ProcessIdList;
+        }
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct PROCESS_BASIC_INFORMATION
+        internal struct ProcessBasicInformation
         {
             public uint ExitStatus;
             public IntPtr PebBaseAddress;
@@ -90,14 +97,10 @@ internal static partial class NativeMethods
         [DllImport("kernel32.dll", SetLastError = true)]
         internal static extern bool AssignProcessToJobObject(IntPtr hJob, IntPtr hProcess);
 
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-        internal static extern IntPtr GetCommandLine();
-
-        [DllImport("ntdll.dll", SetLastError = true)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-        internal static extern unsafe uint NtQueryInformationProcess(SafeProcessHandle ProcessHandle, int ProcessInformationClass, void* ProcessInformation, uint ProcessInformationLength,
-            out uint ReturnLength);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern unsafe bool QueryInformationJobObject(IntPtr processHandle, JobObjectInfoClass jobObjectInformationClass, IntPtr lpJobObjectInformation,
+            uint cbJobObjectInformationLength, out uint returnLength);
     }
 
 
@@ -106,7 +109,7 @@ internal static partial class NativeMethods
     internal static partial bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, [MarshalAs(UnmanagedType.Bool)] bool bRepaint);
 
     [LibraryImport("user32.dll")]
-    public static partial IntPtr GetWindowThreadProcessId(IntPtr window, out int process);
+    public static partial IntPtr GetWindowThreadProcessId(IntPtr window, out uint process);
 
     [LibraryImport("user32.dll")]
     public static partial IntPtr GetForegroundWindow();
@@ -119,7 +122,11 @@ internal static partial class NativeMethods
     public static partial bool EnumDisplayMonitors(IntPtr hdc, IntPtr lprcClip, MonitorEnumDelegate lpfnEnum, IntPtr dwData);
 
     [LibraryImport("user32.dll")]
-    public static partial int EnumWindows(EnumWindowsProc lpEnumFunc, int lParam);
+    public static partial int EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
+
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool IsWindowVisible(IntPtr hWnd);
 }
 
 public enum SM

@@ -52,7 +52,11 @@ public class RunCommand : BaseCommand
         if (!NoSwitch)
             VirtualDesktopProvider.Switch(desktopId.Value);
 
-        _processService.Start(Command, Arguments, out var hWnd);
+        var processes = _processService.GetOrStartProcess(Command, Arguments);
+        var hWnd = _processService.GetMainWindowHandle(processes);
+        
+        if(hWnd == IntPtr.Zero)
+            return -1;
 
         if (NoSwitch)
         {

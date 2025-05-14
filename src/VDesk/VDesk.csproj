@@ -9,10 +9,10 @@
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         
-        <PublishSingleFile>true</PublishSingleFile>
-        <SelfContained>true</SelfContained>
+<!--        <PublishSingleFile>true</PublishSingleFile>-->
+<!--        <SelfContained>true</SelfContained>-->
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-        <PublishTrimmed>true</PublishTrimmed>
+<!--        <PublishTrimmed>true</PublishTrimmed>-->
     </PropertyGroup>
     
     <ItemGroup>
