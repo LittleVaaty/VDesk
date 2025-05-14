@@ -22,19 +22,31 @@ The main reason of the fork is that the original project seam to be abadonned.
 > **TODO:** provide more info !!
 
 
-## Usage:
+---
 
-`vdesk create <number>`
+## 📦 Features
 
-`vdesk run [options] <Command>`
+- Create multiple virtual desktops
+- Switch between desktops
+- Launch applications on a specific desktop
+- Move processes to another desktop
+- Split window position (left/right half)
+- Prevent switching when launching apps
+- Pass complex command-line arguments
+- Delay execution for slow-starting apps
 
-`vdesk move [options] <ProcessName>`
+## 🧰 Usage
 
-`vdesk switch <Number>`
+```sh
+vdesk create <number>
+vdesk run [options] <command>
+vdesk move [options] <process name>
+vdesk switch <number>
+```
 
-Run `vdesk [command] --help` for more information about a command.
+Run `vdesk [command] --help` for detailed command usage.
 
-### Examples:
+## 🚀 Examples
 Create total of 5 desktops:
 
 `vdesk create 5`
