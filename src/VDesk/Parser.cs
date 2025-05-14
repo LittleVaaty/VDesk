@@ -7,6 +7,7 @@ using VDesk.Commands.Help;
 using VDesk.Commands.Move;
 using VDesk.Commands.Run;
 using VDesk.Commands.SetName;
+using VDesk.Commands.Switch;
 using VDesk.Commands.Total;
 using VDesk.Utils;
 
@@ -27,7 +28,8 @@ public static class Parser
         GetNameCommandParser.GetCommand(),
         GetNamesCommandParser.GetCommand(),
         RunCommandParser.GetCommand(),
-        MoveCommandParser.GetCommand()
+        MoveCommandParser.GetCommand(),
+        SwitchCommandParser.GetCommand()
     ];
 
     public static readonly CliOption<bool> InfoOption = new("--info");
