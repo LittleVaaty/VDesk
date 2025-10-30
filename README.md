@@ -1,7 +1,5 @@
 # VDesk
 
-[![.NET](https://github.com/LittleVaaty/VDesk/actions/workflows/dotnet-CI.yml/badge.svg)](https://github.com/LittleVaaty/VDesk/actions/workflows/dotnet-CI.yml)
-
 VDesk is a fork of [eksime/VDesk](https://github.com/eksime/VDesk) that supports Windows 10 and 11.  
 This fork was created because the original project appears to be abandoned.
 
@@ -13,7 +11,6 @@ This fork was created because the original project appears to be abandoned.
 
 ### Prerequisites
 - **Operating System**: Windows 11 or Windows 10 build 19041 (20H1) or later.
-- **.NET Runtime**: At least version 8. You can download the latest Long Term Support (LTS) version from [this page](https://dotnet.microsoft.com/en-us/download/dotnet).
 
 ### Manual Installation
 1. Uninstall any previous version of VDesk.
