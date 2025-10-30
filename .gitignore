@@ -245,3 +245,7 @@ _Pvt_Extensions
 
 # Rider
 .idea/*
+
+# Added by cargo
+
+/target

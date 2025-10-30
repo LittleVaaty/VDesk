@@ -1,0 +1,12 @@
+[package]
+name = "vdesk"
+version = "2.0.0-beta.8"
+edition = "2024"
+
+[dependencies]
+clap = { version = "4.5.46", features = ["derive"]}
+color-eyre = "0.6.5"
+env_logger = "0.11.8"
+log = "0.4.28"
+windows = { version = "0.58", features = ["Win32_Foundation", "Win32_UI_WindowsAndMessaging", "Win32_System_Diagnostics_ToolHelp"] }
+winvd = "0.0.48"
