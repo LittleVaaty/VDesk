@@ -37,7 +37,7 @@ This fork was created because the original project appears to be abandoned.
 
 ### General Syntax
 ```sh
-vdesk [command] [options]
+vdesk.exe [OPTIONS] <COMMAND>
 ```
 
 ### Available Commands
@@ -55,9 +55,9 @@ vdesk [command] [options]
 ### Global Options
 | Option             | Description                                      |
 |--------------------|--------------------------------------------------|
-| `-?`, `-h`, `--help` | Displays help and usage information.            |
+| `-h`, `--help`     | Displays help and usage information.            |
 | `--version`        | Displays version information.                    |
-| `--info`           | Displays additional information.                 |
+| `-v`, `--verbose`  | Verbosity Level (-v, -vv, -vvv)                 |
 
 ---
 
