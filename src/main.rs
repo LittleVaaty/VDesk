@@ -9,9 +9,9 @@ use log::{info, debug};
 #[derive(Parser)]
 #[command(name = "vdesk")]
 #[command(version)]
-#[command(about = "Gestionnaire de bureaux virtuels", long_about = None)]
+#[command(about = "Virtual desktop manager", long_about = None)]
 struct Cli {
-    /// Niveau de verbosité (-v, -vv, -vvv)
+    /// Verbosity level (-v, -vv, -vvv)
     #[arg(short, long, action = clap::ArgAction::Count)]
     verbose: u8,
 
@@ -40,9 +40,9 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
 
     init_logger(cli.verbose);
-    info!("Démarrage de l'application");
+    info!("Starting the application");
     if cli.verbose > 0 {
-        debug!("Mode verbose activé");
+        debug!("Verbosity level: {}", cli.verbose);
     }
 
     commands::handle_command(cli.command)
