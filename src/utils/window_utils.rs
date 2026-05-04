@@ -3,9 +3,6 @@ use windows::Win32::UI::WindowsAndMessaging::{
     EnumWindows, GetWindowTextW, GetWindowTextLengthW, IsWindowVisible, GetWindowThreadProcessId, 
     MoveWindow, GetSystemMetrics, SM_CXMAXIMIZED, SM_CYMAXIMIZED
 };
-use windows::Win32::System::Diagnostics::ToolHelp::{
-    CreateToolhelp32Snapshot, Process32First, Process32Next, PROCESSENTRY32, TH32CS_SNAPPROCESS
-};
 use std::ffi::OsString;
 use std::os::windows::ffi::OsStringExt;
 use log::{debug, trace};
@@ -14,41 +11,6 @@ use crate::commands::common::HalfSplit;
 pub struct FindWindowData {
     pub target_pid: u32,
     pub hwnd: Option<HWND>,
-}
-
-pub fn find_process_by_name(process_name: &str) -> Option<u32> {
-    let mut pid:Option<u32> = None;
-    unsafe {
-        let snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0).expect("Failed to create snapshot");
-        let mut entry = PROCESSENTRY32 {
-            dwSize: std::mem::size_of::<PROCESSENTRY32>() as u32,
-            ..Default::default()
-        };
-
-        if !Process32First(snapshot, &mut entry).is_err() {
-            loop {
-                let exe_name = String::from_utf16_lossy(
-                                    &entry.szExeFile
-                                        .iter()
-                                        .take_while(|&&c| c != 0)
-                                        .map(|&c| c as u16)
-                                        .collect::<Vec<u16>>()
-                                );
-                trace!("Checking process {} with PID {}", exe_name, entry.th32ProcessID);
-                if exe_name.eq_ignore_ascii_case(process_name) {
-                    debug!("Found process {} with PID {}", exe_name, entry.th32ProcessID);
-                    pid = Some(entry.th32ProcessID);
-                    break;
-                }
-
-                if Process32Next(snapshot, &mut entry).is_err() {
-                    break;
-                }
-            }
-        }
-    }
-
-    pid
 }
 
 pub fn move_half_split(hwnd: HWND, split: Option<HalfSplit>) -> windows::core::Result<()> {

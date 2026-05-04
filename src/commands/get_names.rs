@@ -1,12 +1,12 @@
 use color_eyre::eyre::{eyre, Result};
 use log::info;
-use winvd::{get_desktops, Desktop};
+
+use crate::utils::desktop_utils;
 
 pub fn get_names() -> Result<()> {
     info!("Running the 'get-names' command");
 
-    let desktops: Vec<Desktop> = get_desktops()
-        .map_err(|e| eyre!("Failed to retrieve virtual desktops: {:?}", e))?;
+    let desktops = desktop_utils::get_desktops()?;
 
     for desktop in &desktops {
         let name = desktop.get_name().map_err(|e| eyre!("Failed to get desktop name: {:?}", e))?;

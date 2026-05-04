@@ -1,5 +1,5 @@
 use color_eyre::eyre::{Result, eyre};
-use log::{debug, info};
+use log::{info};
 use winvd::{get_desktops};
 
 
@@ -9,6 +9,6 @@ pub fn count_virtual_desktops() -> Result<()> {
     let desktops = get_desktops()
         .map_err(|e| eyre!("Failed to retrieve virtual desktops: {:?}", e))?;
     
-    debug!("Number of virtual desktops: {}", desktops.len());
+    println!("Number of virtual desktops: {}", desktops.len());
     Ok(())
 }
