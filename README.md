@@ -11,6 +11,7 @@ This fork was created because the original project appears to be abandoned.
 
 ### Prerequisites
 - **Operating System**: Windows 11 or Windows 10 build 19041 (20H1) or later.
+-  **MS Visual C++ Redistributables**
 
 ### Manual Installation
 1. Uninstall any previous version of VDesk.
