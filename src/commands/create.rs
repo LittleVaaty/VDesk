@@ -1,5 +1,5 @@
 use clap::Args;
-use color_eyre::eyre::Result;
+use color_eyre::eyre::{eyre, Result};
 use winvd::{get_desktop_count, create_desktop};
 use log::{debug, info};
 
@@ -11,14 +11,15 @@ pub struct CreateArgs {
 pub fn create_virtual_desktops(args: CreateArgs) -> Result<()> {
     info!("Running the 'create' command");
 
-    let desktop_ids = get_desktop_count().expect("cannot get desktip ids count");
+    let current_count = get_desktop_count()
+        .map_err(|e| eyre!("Failed to get desktop count: {:?}", e))?;
 
-    let mut number = args.number;
-    debug!("Create {0} virtual desktop", desktop_ids - number);
+    let desktops_to_create = args.number.saturating_sub(current_count);
+    debug!("Creating {} virtual desktops", desktops_to_create);
 
-    while number > desktop_ids {
-        let _ = create_desktop();
-        number += 1;
+    for _ in 0..desktops_to_create {
+        create_desktop()
+            .map_err(|e| eyre!("Failed to create desktop: {:?}", e))?;
     }
 
     Ok(())
