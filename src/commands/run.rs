@@ -21,7 +21,7 @@ pub struct RunArgs {
     pub command: String,
     
     /// Command arguments
-    #[arg(short = 'a', long = "arguments")]
+    #[arg(short = 'a', long = "arguments", allow_hyphen_values = true)]
     pub arguments: Option<String>,
     
     /// Do not switch to the virtual desktop
