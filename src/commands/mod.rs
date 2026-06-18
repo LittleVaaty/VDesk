@@ -20,7 +20,7 @@ pub enum Commands {
     GetNames,
     Run(run::RunArgs),
     Move(move_window::MoveWindowArgs),
-    Switch(switch::SwitchArgs),
+    Switch(switch::SwitchArgs)
 }
 
 pub fn handle_command(command: Commands) -> Result<()> {
@@ -32,6 +32,6 @@ pub fn handle_command(command: Commands) -> Result<()> {
         Commands::GetNames => get_names::get_names(),
         Commands::Run(args) => run::run(args),
         Commands::Move(args) => move_window::move_window(args),
-        Commands::Switch(args) => switch::switch(args),
+        Commands::Switch(args) => switch::switch(args)
     }
 }

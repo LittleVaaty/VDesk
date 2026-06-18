@@ -12,16 +12,11 @@ pub struct SwitchArgs {
 
 pub fn switch(args: SwitchArgs) -> Result<()> {
     info!("Running the 'switch' command");
-    debug_args(&args);
+    debug!("SwitchArgs: {:?}", args);
 
     let desktop = desktop_utils::get_desktop_id_by_name_or_index(&args.index_or_name)?
         .ok_or_else(|| eyre!("Virtual desktop not found: {}", &args.index_or_name))?;
 
     desktop_utils::switch_desktop(&desktop)
-}
-
-fn debug_args(args: &SwitchArgs) {
-    debug!("SwitchArgs:");
-    debug!("  index_or_name: {}", args.index_or_name);
 }
 
